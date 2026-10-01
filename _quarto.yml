@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "dem04747.github.io"
+  title: "Daniel Martínez"
   navbar:
     left:
       - href: index.qmd
