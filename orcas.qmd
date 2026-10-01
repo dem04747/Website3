@@ -1,7 +1,7 @@
 ---
 title: "Orca Encounters"
 subtitle: "Data from TidyTuesday"
-author: "Daniel E. Martínez"
+author: "Daniel Martínez Scavino"
 format: html
 execute: 
   warning: false
