@@ -27,7 +27,7 @@ min_ht <- min(palmtrees$max_stem_height_m, na.rm = TRUE)
 max_ht <- max(palmtrees$max_stem_height_m, na.rm = TRUE)
 ```
 
-# Introduction
+# Palm trees can be tall! Or very short... 
 
 Palm trees are quite variable in height ranging from `r min_ht` to `r max_ht` meters. 
 
