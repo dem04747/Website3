@@ -31,6 +31,41 @@ max_ht <- max(palmtrees$max_stem_height_m, na.rm = TRUE)
 
 Palm trees are quite variable in height ranging from `r min_ht` to `r max_ht` meters. 
 
+Palm tress can be grouped by Tribes (a taxonomic rank between family and genus). Members of some tribes are taller than others. 
+
+
+```{r}
+#| echo: false
+ggplot(palmtrees, aes(x = palm_tribe, y = max_stem_height_m)) +
+geom_boxplot() +
+labs(
+x = "Tribe",
+y = "Maximum Height in Meters",
+title = "Height of Palm Trees by Tribe"
+) +
+  theme_minimal() +
+  theme(
+    # Rotate labels 45 degrees and align them to the ticks
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)
+  ) 
+
+```
+The tibble below shows the top and the bottom 5 tribes according to mean height.
+
+```{r}
+#| echo: false
+palmtrees |>
+group_by(palm_tribe) |>
+summarize(
+    mean_height = mean(max_stem_height_m, na.rm = TRUE),
+    min_height  = min(max_stem_height_m, na.rm = TRUE),
+    max_height  = max(max_stem_height_m, na.rm = TRUE)
+    ) |>
+arrange(desc(mean_height)) |>
+slice(c(1:5, (n() - 4):n()))
+```
+
+
 ```{r}
 #| echo: false
 ggplot(
@@ -56,36 +91,4 @@ scale_x_log10() +
 theme_minimal()
 ```
 
-Palm tress can be grouped by Tribes (a taxonomic rank between family and genus). Members of some tribes are taller than others. The tibble below shows the top and the bottom 5 tribes according to mean height.
-
-```{r}
-#| echo: false
-palmtrees |>
-group_by(palm_tribe) |>
-summarize(
-    mean_height = mean(max_stem_height_m, na.rm = TRUE),
-    min_height  = min(max_stem_height_m, na.rm = TRUE),
-    max_height  = max(max_stem_height_m, na.rm = TRUE)
-    ) |>
-arrange(desc(mean_height)) |>
-slice(c(1:5, (n() - 4):n()))
-```
-
-
-```{r}
-#| echo: false
-ggplot(palmtrees, aes(x = palm_tribe, y = max_stem_height_m)) +
-geom_boxplot() +
-labs(
-x = "Tribe",
-y = "Maximum Height in Meters",
-title = "Height of Palm Trees by Tribe"
-) +
-  theme_minimal() +
-  theme(
-    # Rotate labels 45 degrees and align them to the ticks
-    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)
-  ) 
-
-```
 
