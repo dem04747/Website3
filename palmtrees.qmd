@@ -31,7 +31,7 @@ max_ht <- max(palmtrees$max_stem_height_m, na.rm = TRUE)
 
 Palm trees are quite variable in height ranging from `r min_ht` to `r max_ht` meters. 
 
-Palm tress can be grouped by Tribes (a taxonomic rank between family and genus). Members of some tribes are taller than others. 
+Palm tress can be grouped by Tribes (a taxonomic rank between family and genus). Members of some tribes are taller than trees in other tribes. Calameae and Lepidocaryeae are two tribes with particularly tall trees. 
 
 
 ```{r}
