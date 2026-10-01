@@ -16,9 +16,9 @@ library(maps)
 
 ```
 
-# Introduction
+# Orcas are basty fish that enjoy munching on people!
 
-Orcas are nasty fish that enjoy munching on people! Nope! There are several things that are wrong with that picture.  Orcas are cetaceans related to dolphins that live in all of the world oceans. They are higly intelligent predators that hunt in coordinated family pods using very elaborate strategies.  Their varied diet includes fish, sharks, smaller marine mammals (e.g. see lions), and even whales.  
+Nope! There are several things that are wrong with that picture.  Orcas are cetaceans related to dolphins that live in all of the world oceans. They are higly intelligent predators that hunt in coordinated family pods using very elaborate strategies.  Their varied diet includes fish, sharks, smaller marine mammals (e.g. see lions), and even whales.  
 
 
 ```{r}
