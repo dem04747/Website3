@@ -1,0 +1,91 @@
+---
+title: "Palm Trees of the World"
+subtitle: "Data from TidyTuesday"
+author: "Daniel E. Martínez"
+format: html
+execute: 
+  warning: false
+  message: false
+---
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(openintro)
+```
+```{r}
+#| echo: false
+palmtrees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-18/palmtrees.csv')
+
+```
+
+
+
+```{r}
+#| echo: false
+min_ht <- min(palmtrees$max_stem_height_m, na.rm = TRUE)
+max_ht <- max(palmtrees$max_stem_height_m, na.rm = TRUE)
+```
+
+# Introduction
+
+Palm trees are quite variable in height ranging from `r min_ht` to `r max_ht` meters. 
+
+```{r}
+#| echo: false
+ggplot(
+palmtrees,
+aes(
+y = average_fruit_length_cm,
+x = max_stem_height_m,
+color = understorey_canopy,
+shape = understorey_canopy
+)
+) +
+
+geom_point() +
+labs(
+title = "Fruit length of palm trees",
+y = "fruit length cm",
+x = "stem height m",
+color = "growth",
+shape = "growth"
+)+ 
+scale_y_log10() + 
+scale_x_log10() +
+theme_minimal()
+```
+
+Palm tress can be grouped by Tribes (a taxonomic rank between family and genus). Members of some tribes are taller than others. The tibble below shows the top and the bottom 5 tribes according to mean height.
+
+```{r}
+#| echo: false
+palmtrees |>
+group_by(palm_tribe) |>
+summarize(
+    mean_height = mean(max_stem_height_m, na.rm = TRUE),
+    min_height  = min(max_stem_height_m, na.rm = TRUE),
+    max_height  = max(max_stem_height_m, na.rm = TRUE)
+    ) |>
+arrange(desc(mean_height)) |>
+slice(c(1:5, (n() - 4):n()))
+```
+
+
+```{r}
+#| echo: false
+ggplot(palmtrees, aes(x = palm_tribe, y = max_stem_height_m)) +
+geom_boxplot() +
+labs(
+x = "Tribe",
+y = "Maximum Height in Meters",
+title = "Height of Palm Trees by Tribe"
+) +
+  theme_minimal() +
+  theme(
+    # Rotate labels 45 degrees and align them to the ticks
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)
+  ) 
+
+```
+

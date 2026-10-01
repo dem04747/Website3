@@ -1,0 +1,180 @@
+---
+title: "Orca Encounters"
+subtitle: "Data from TidyTuesday"
+author: "Daniel E. Martínez"
+format: html
+execute: 
+  warning: false
+  message: false
+---
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(openintro)
+library(maps)
+
+```
+
+# Introduction
+
+Orcas are nasty fish that enjoy munching on people! Nope! There are several things that are wrong with that picture.  Orcas are cetaceans related to dolphins that live in all of the world oceans. They are higly intelligent predators that hunt in coordinated family pods using very elaborate strategies.  Their varied diet includes fish, sharks, smaller marine mammals (e.g. see lions), and even whales.  
+
+
+```{r}
+#| echo: false
+orcas <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-10-15/orcas.csv')
+```
+
+
+```{r}
+#| echo: false
+library(ggplot2)
+library(sf)
+library(ggspatial)
+
+# Convert coordinates to sf object
+orcas_sf <- orcas %>%
+  filter(!is.na(begin_longitude), !is.na(begin_latitude)) %>%
+  st_as_sf(coords = c("begin_longitude", "begin_latitude"), crs = 4326)
+
+ggplot() +
+  # Adds OpenStreetMap tiles automatically bounded by your data
+  annotation_map_tile(type = "osm", zoom = 9) + 
+  geom_sf(data = orcas_sf, color = "red", size = 1, alpha = 0.6) +
+  theme_minimal() +
+  labs(title = "Orca Encounter Locations")
+```
+
+
+```{r}
+#| echo: false
+library(ggplot2)
+library(sf)
+library(ggspatial)
+
+# Convert coordinates to sf object
+orcas_sf <- orcas %>%
+  filter(!is.na(begin_longitude), !is.na(begin_latitude)) %>%
+  st_as_sf(coords = c("begin_longitude", "begin_latitude"), crs = 4326)
+
+ggplot() +
+  # Adds OpenStreetMap tiles automatically bounded by your data
+  annotation_map_tile(type = "osm", zoom = 9) + 
+  geom_sf(data = orcas_sf, aes(color = pods_or_ecotype), size = 1, alpha = 0.6) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(
+    title = "Orca Encounter by Pods",
+    color = "Pod / Ecotype"
+  )
+```
+
+
+```{r}
+#| echo: false
+pods_vector <- orcas |> 
+  group_by(pods_or_ecotype) |> 
+  summarize(count = n()) |> 
+  filter(count >= 2) |>
+arrange(desc(count)) |>
+head(4) |> 
+pull(pods_or_ecotype)
+
+# pods_vector
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+library(ggplot2)
+library(sf)
+library(ggspatial)
+
+# Convert coordinates to sf object
+orcas_sf <- orcas %>%
+  filter(!is.na(begin_longitude), !is.na(begin_latitude)) %>%
+  st_as_sf(coords = c("begin_longitude", "begin_latitude"), crs = 4326)
+
+ggplot() +
+  # Adds OpenStreetMap tiles automatically bounded by your data
+  annotation_map_tile(type = "osm", zoom = 9) + 
+  geom_sf(
+    data = filter(orcas_sf, pods_or_ecotype %in% pods_vector), 
+    aes(color = pods_or_ecotype), 
+    size = 1, 
+    alpha = 0.6
+  ) +
+  # facet_wrap(~ pods_vector) +
+  theme_minimal() +
+  labs(
+    title = "Orca Encounters by Most Frequent Pods",
+    color = "Pod / Ecotype"
+  )
+```
+
+
+```{r}
+#| echo: false
+library(dplyr)
+library(ggplot2)
+library(sf)
+library(ggspatial)
+
+# Convert coordinates to sf object
+orcas_sf <- orcas %>%
+  filter(!is.na(begin_longitude), !is.na(begin_latitude)) %>%
+  st_as_sf(coords = c("begin_longitude", "begin_latitude"), crs = 4326)
+
+# 1. Filter the dataset to keep ONLY the pods in pods_vector
+orcas_filtered <- orcas_sf %>% 
+  filter(pods_or_ecotype %in% pods_vector)
+
+ggplot() +
+  # Adds OpenStreetMap tiles automatically bounded by your data
+  annotation_map_tile(type = "osm", zoom = 9) + 
+  geom_sf(
+    data = filter(orcas_filtered, pods_or_ecotype %in% pods_vector), 
+    aes(color = pods_or_ecotype), 
+    size = 1, 
+    alpha = 0.6
+  ) +
+  facet_wrap(~ pods_or_ecotype, ncol = 2) + # Control column layout 
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(size = 12, face = "bold") # Enlarge facet labels
+  ) +
+  labs(
+    title = "Orca Encounters by Most Frequent Pods",
+    color = "Pod / Ecotype"
+  )
+```
+
+```{r}
+#| eval: false
+#| echo: false
+# Preview the first few rows
+head(orcas)
+
+# Check summary statistics and missing values
+glimpse(orcas)
+
+# View unique values for pods or ecotypes observed
+orcas %>% 
+  count(pods_or_ecotype, sort = TRUE)
+
+# Plot encounters over the years
+orcas %>% 
+  count(year) %>% 
+  ggplot(aes(x = year, y = n)) +
+  geom_col(fill = "steelblue") +
+  theme_minimal() +
+  labs(
+    title = "CWR Orca Encounters per Year",
+    x = "Year",
+    y = "Number of Encounters"
+  )
+ 
+```

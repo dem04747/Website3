@@ -1,19 +1,24 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "Website3"
+  title: "dem04747.github.io"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - href: about.qmd
+      - text: Data Viz
+        menu: 
+         - text: "Palm Trees"
+           href: palmtrees.qmd
+         - text: "Orcas"
+           href: orcas.qmd
 
 format:
   html:
-    theme:
-      - cosmo
-      - brand
+    theme: cosmo
     css: styles.css
     toc: true
 
